@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget{
     Widget textSection = Container(
       padding: const EdgeInsets.all(32),
       child: const Text(
-            'Lake Oeschinen lies at the foot of the Bluemlisalp in the Bernnese'
+            'Lake Oeschinen lies at the foot of the Bluemlisalp in the Bernese'
             'Alsp.\nSituated 1,578 meters above sea level, it is one of the'
             'larger Alpine Lakes.\nA gondola ride from Kandersteg, followed by a'
             'half-hour walk through pastures and pine forest, leads you to the'
