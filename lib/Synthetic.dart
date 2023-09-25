@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:english_words/english_words.dart';
 
 import 'package:flutter/material.dart';
@@ -10,22 +12,22 @@ void main(){
 
 class MyApp extends StatelessWidget{
   const MyApp({super.key});
-  
-  
+
+
   @override
   Widget build(BuildContext context){
     return ChangeNotifierProvider(create: (context)=> MyAppState(),
-    child: MaterialApp(
-      title: 'Namer App',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: (Colors.deepOrange),
-        ),
+      child: MaterialApp(
+        title: 'Namer App',
+        theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(seedColor: (Colors.deepOrange),
+          ),
 
+        ),
+        home: MyHomePage(),
       ),
-      home: MyHomePage(),
-    ),
-    
+
     );
   }
 }
@@ -67,6 +69,9 @@ class _MyHomePageState extends State<MyHomePage>{
         page = GeneratorPage();
       case 1:
         page = FavoritesPage();
+      case 2:
+        page = TagsPage();
+        break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
 
@@ -78,26 +83,30 @@ class _MyHomePageState extends State<MyHomePage>{
           children: [
             SafeArea(
               child: NavigationRail(
-              extended: constraints.maxWidth >= 600,
-              destinations: [
-                NavigationRailDestination(
-                  icon: Icon(Icons.home),
-                  label: Text('Home'),
+                extended: constraints.maxWidth >= 600,
+                destinations: [
+                  NavigationRailDestination(
+                    icon: Icon(Icons.home),
+                    label: Text('Home'),
 
-                ),
-                NavigationRailDestination(
+                  ),
+                  NavigationRailDestination(
                     icon: Icon(Icons.favorite) ,
                     label: Text('Favorites'),
-                ),
-              ],
+                  ),
+                  NavigationRailDestination(
+                    icon: Icon(Icons.image),
+                    label: Text('Tags'),
+                  ),
+                ],
 
-              selectedIndex: selectedIndex,
-              onDestinationSelected: (value){
-                setState(() {
-                  selectedIndex = value;
-                });
-              },
-            ),
+                selectedIndex: selectedIndex,
+                onDestinationSelected: (value){
+                  setState(() {
+                    selectedIndex = value;
+                  });
+                },
+              ),
 
             ),
             Expanded(child: Container(
@@ -136,18 +145,18 @@ class GeneratorPage extends StatelessWidget{
             children: [
               ElevatedButton.icon(
                 onPressed: (){
-                appState.toggleFavorite();
-              },
+                  appState.toggleFavorite();
+                },
 
-              icon: Icon(icon),
+                icon: Icon(icon),
                 label: Text('Like'),
               ),
               SizedBox(width: 10),
               ElevatedButton(
                 onPressed: (){
-                appState.getNext();
-              },
-              child: Text('Next'),
+                  appState.getNext();
+                },
+                child: Text('Next'),
               ),
             ],
           ),
@@ -161,7 +170,7 @@ class BigCard extends StatelessWidget{
   const BigCard({
     super.key,
     required this.pair,
-});
+  });
   final WordPair pair;
 
   @override
@@ -199,7 +208,7 @@ class FavoritesPage extends StatelessWidget{
     return ListView(
       children: [
         Padding(padding: const EdgeInsets.all(20),
-        child: Text('You have ' '${appState.favorites.length} favorites: '),
+          child: Text('You have ' '${appState.favorites.length} favorites: '),
         ),
         for( var pair in appState.favorites)
           ListTile(
@@ -207,6 +216,100 @@ class FavoritesPage extends StatelessWidget{
             title: Text(pair.asLowerCase),
           )
       ],
+    );
+  }
+}
+class ImageTag extends StatelessWidget {
+  final String text;
+  final File imageFile; // Thay đổi kiểu dữ liệu từ String sang File
+  final bool isSelected;
+  final Function(bool) onTap;
+
+  ImageTag({
+    required this.text,
+    required this.imageFile, // Thay đổi tham số này
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        onTap(!isSelected);
+      },
+      child: Container(
+        padding: EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.blue : Colors.grey,
+          borderRadius: BorderRadius.circular(16.0),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.file( // Sử dụng Image.file để hiển thị ảnh từ máy
+              imageFile,
+              width: 24.0,
+              height: 24.0,
+            ),
+            SizedBox(width: 8.0),
+            Text(
+              text,
+              style: TextStyle(
+                color: isSelected ? Colors.white : Colors.black,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class TagsPage extends StatefulWidget {
+  @override
+  _TagsPageState createState() => _TagsPageState();
+}
+
+class _TagsPageState extends State<TagsPage> {
+  List<Map<String, dynamic>> tags = [
+    {
+      'text': 'Tag 1',
+      'imageFile': File('images/pic1.jpg'), // Đặt đường dẫn đến ảnh từ máy
+      'isSelected': false,
+    },
+    {
+      'text': 'Tag 2',
+      'imageFile': File('images/pic2.jpg'), // Đặt đường dẫn đến ảnh từ máy
+      'isSelected': false,
+    },
+    // Thêm các tag khác ở đây
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Image Tags'),
+      ),
+      body: Center(
+        child: Wrap(
+          spacing: 8.0,
+          runSpacing: 8.0,
+          children: tags.map((tag) {
+            return ImageTag(
+              text: tag['text'],
+              imageFile: tag['imageFile'],
+              isSelected: tag['isSelected'],
+              onTap: (isSelected) {
+                setState(() {
+                  tag['isSelected'] = isSelected;
+                });
+              },
+            );
+          }).toList(),
+        ),
+      ),
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ki4/demo_img/s2.dart';
+
 
 void main(){
   runApp(const MyApp());
