@@ -10,7 +10,7 @@ void main(){
 class MyApp extends StatelessWidget {
   const MyApp ({super.key});
 
-  static const showGrid = true;
+  static const showGrid = false;
 
   @override
   Widget build(BuildContext context){

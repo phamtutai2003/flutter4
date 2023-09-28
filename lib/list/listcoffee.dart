@@ -8,7 +8,7 @@ void main() {
 class AppMenu extends StatelessWidget {
   const AppMenu({super.key});
 
-  static const showGrid = false;
+  static const showGrid = true;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class AppMenu extends StatelessWidget {
       padding: const EdgeInsets.all(4),
       mainAxisSpacing: 4,
       crossAxisSpacing: 4,
-      children: _buildGridTileListCoffee(18),
+      children: _buildGridTileListCoffee(6),
     );
   }
 
